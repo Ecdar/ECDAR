@@ -34,10 +34,10 @@ unzip build/distributions/*.zip -d $TEMPD
 cp lib/Reveaal $TEMPD/*/lib
 cp lib/Reveaal.exe $TEMPD/*/lib
 
-# Copy samples directory
+# Copy examples directory
 cp -r examples $TEMPD/*
 
-# Compile j-Ecdar zip archive, extract to new temporary directory, and move executable and lib files
+# Compile j-Ecdar zip archive
 cd ../j-Ecdar/
 ./gradlew distZip
 
