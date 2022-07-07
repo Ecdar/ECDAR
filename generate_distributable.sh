@@ -8,7 +8,7 @@ version_file="src/main/resources/ecdar/version"
 if [ -f $version_file ]; then
     echo "version: ${version}" > $version_file
 else 
-    echo "The file $(pwd)/$version_file does not exist. Make sure that you are executing this from the Ecdar-GUI repository root."
+    echo "The file $(pwd)/${version_file} does not exist. Make sure that you are executing this from the Ecdar-GUI repository root."
     exit 1
 fi
 
