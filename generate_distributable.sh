@@ -3,12 +3,12 @@
 read -p "The version of this release: " version
 
 target_name="ecdar-${version}"
-properties_file="src/main/resources/ecdar/properties"
+version_file="src/main/resources/ecdar/version"
 
-if [ -f $properties_file ]; then
-    echo "version: ${version}" > $properties_file
+if [ -f $version_file ]; then
+    echo "version: ${version}" > $version_file
 else 
-    echo "The file $(pwd)/$properties_file does not exist. Make sure that you are executing this from the Ecdar-GUI repository root."
+    echo "The file $(pwd)/$version_file does not exist. Make sure that you are executing this from the Ecdar-GUI repository root."
     exit 1
 fi
 
