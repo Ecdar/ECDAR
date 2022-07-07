@@ -36,6 +36,7 @@ cp lib/Reveaal.exe $TEMPD/*/lib
 
 # Copy examples directory
 cp -r examples $TEMPD/*
+cp src/main/resources/ecdar/README.md $TEMPD/*
 
 # Compile j-Ecdar zip archive
 cd ../j-Ecdar/
