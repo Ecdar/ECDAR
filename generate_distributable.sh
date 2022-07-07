@@ -35,7 +35,7 @@ cp lib/Reveaal $TEMPD/*/lib
 cp lib/Reveaal.exe $TEMPD/*/lib
 
 # Copy samples directory
-cp -r samples $TEMPD/*/
+cp -r examples $TEMPD/*
 
 # Compile j-Ecdar zip archive, extract to new temporary directory, and move executable and lib files
 cd ../j-Ecdar/
