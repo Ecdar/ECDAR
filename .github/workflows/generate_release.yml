@@ -1,0 +1,47 @@
+name: Generate Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-release:
+    runs-on: ubuntu-latest
+    steps:
+      # Recursively checkout all dependencies
+      - name: Checkout project sources
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+        env:
+          GUI_Dir: ${{ github.workspace }}/Ecdar-GUI
+          ECDAR_Dir: ${{ github.workspace }}
+          Version: snapshot
+          
+          
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          java-package: jdk
+          
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+          
+      - name: Download j-Ecdar
+        run: . # ToDo clone into $Ecdar-Dir/lib
+      
+      - name: Download Reveaal
+        run: . # ToDo clone into $Ecdar-Dir/lib
+        
+      - name: Generate Distributions
+        run: ./$Ecdar-Dir/*.sh
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: $Version
+          path: $ECDAR_Dir # ToDO: Set path to the resulting
