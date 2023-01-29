@@ -1,9 +1,25 @@
 #!/bin/bash
 
-read -p "The version of this release: " version
+while getopts v:o: flag
+do
+    case "${flag}" in
+        v) version=${OPTARG};;
+        o) output_dir=${OPTARG};;
+    esac
+done
+
+if [ $version="" ]; then
+    version="snapshot"
+fi
+
+if [ $output_dir="" ]; then
+    output_dir="${HOME}/Documents"
+fi
 
 target_name="ecdar-${version}"
 version_file="src/main/resources/ecdar/version"
+
+echo "Generating platform specific distributions of ${target_name} in ${output_dir}"
 
 if [ -f $version_file ]; then
     echo "version: ${version}" > $version_file
@@ -14,7 +30,7 @@ fi
 
 # Generate distributable zip file with specified version
 ./gradlew clean # Clean build directory to prevent multiple .zip files from interfering with script
-./gradlew -PecdarVersion=${version} distZip
+./gradlew -PecdarVersion=$version distZip
 
 # Create temporary directory
 TEMPD=$(mktemp -d)
@@ -62,6 +78,6 @@ chmod u+x $TEMPD/*/lib/Reveaal
 chmod u+x $TEMPD/*/lib/Reveaal.exe
 
 # Clear target directory and copy the contents of the temporary directory to target
-dest="${HOME}/Documents/${target_name}"
+dest="$output_dir/${target_name}"
 rm -r $dest &>/dev/null; mkdir $dest
 cp -r $TEMPD/*/* $dest
