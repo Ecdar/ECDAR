@@ -1,0 +1,56 @@
+name: Generate Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-release:
+    runs-on: ubuntu-latest
+    env:
+      Output_Dir: ${{ github.workspace }}/out
+      Version: snapshot
+
+    steps:
+      - name: Checkout Ecdar/ECDAR Sources
+        uses: actions/checkout@v3
+
+      - name: Checkout Ecdar/Ecdar-GUI Sources
+        uses: actions/checkout@v3
+        with:
+          name: Ecdar/Ecdar-GUI
+          path: Ecdar-GUI
+          submodules: recursive
+          
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+          
+      - name: Download j-Ecdar
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: "Ecdar/j-Ecdar"
+          latest: true
+          fileName: "j-Ecdar*"
+          out-file-path: "Ecdar-GUI/lib/"
+      
+      - name: Download Reveaal
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: "Ecdar/Reveaal"
+          latest: true
+          fileName: "Reveaal*"
+          out-file-path: "Ecdar-GUI/lib/"
+        
+      - name: Generate Distributions
+        run: |
+          cd ${{ github.workspace }}/Ecdar-GUI
+          ./${{ github.workspace }}/*.sh -v $Version -o $Output_Dir
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: $Version
+          path: $Output_Dir
